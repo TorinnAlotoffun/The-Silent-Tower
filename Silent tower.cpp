@@ -1,8 +1,17 @@
 #include <iostream>
 #include <windows.h>
+#include <cstdlib>
+#include <ctime>
 using namespace std;
 int AktHP;
+int KonSouboje = 0;
+int Schovany = 0;
+int Zmateni = 0;
+string NazevNepritelJedna;
 string jmeno = "hrdina";
+int StatyNepritelJedna[3];
+int StatyNepritelDva[3];
+int StatyNepritelTri[3];
 int MaxHP;
 int Dmg;
 int Str;
@@ -46,13 +55,63 @@ default:
 }
 }while (konec = 0);
 }
+int GoblinEnmy(int &HPGoblin, int &DMGGoblin, int &OBRGoblin, string &NazevGoblin){
+HPGoblin = 10;
+DMGGoblin = 3;
+OBRGoblin = 4;
+NazevGoblin = "Goblin";
+}
+int Krysa(int &HPKrysa, int &DMGKrysa, int &OBRKrysa, string &NazevKrysy){
+HPKrysa = 5;
+DMGKrysa = 1;
+OBRKrysa = 3;
+NazevKrysy = "Krysa";
+}
+int Kostlivec(int &HPKostlivec, int &DMGKostlivec, int &OBRKostlivec, string &NazevKostlivec){
+HPKostlivec = 10;
+DMGKostlivec = 5;
+OBRKostlivec = 5;
+NazevKostlivec = "Kostlivec";
+}
+int Sekera(){
+Dmg = Str + 3;
+}
+int Mec(){
+Dmg = Str + 2;
+}
+int Luk(){
+Dmg = Dex + 2;
+}
+int Dyka(){
+Dmg = Dex + 2;
+if (Schovany == 1){
+    Dmg = Dmg + 2;
+}
+}
+int Kytara(){
 
-
+Dmg = Dex + 2;
+if (Zmateni == 1){
+    Dmg = Cha + 2;
+}
+}
+int Klacek() {
+Dmg = Str + 1;
+}
 void nastavBarvu(int barva) {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(hConsole, barva);
 }
 
+void SoubojJedna(){
+KonSouboje = 0;
+cout << " Pred vami je " << NazevNepritelJedna << "\n";
+do{
+cout << " Co chcete delat?\n 1 - Utok\n 2 - Inventar\n 3 - Specialni schopnost"
+
+
+}while (KonSouboje == 0);
+}
 int main(){
 int Karel = 0;
 int anone = 0;
@@ -61,8 +120,6 @@ int sila;
 int vyberclass;
 int y = 0;
 int pocet;
-int HP = 100;
-int DMG = 10;
 int akce;
 do{
 cout << "Vytejte ve hre The Silent Tower";
@@ -72,6 +129,7 @@ cin >> vyberclass;
 cout << endl;
 switch (vyberclass) {
 case 1:
+    inventar[3] = "Mec";
     Str = 4;
     Dex = 3;
     Con = 5;
@@ -79,10 +137,12 @@ case 1:
     Cha = 1;
     MaxHP = 5 + Con;
     AktHP = 5 + Con;
-    cout << " Gratuluji, stal jsi se valecnikem.\n\n Valecnici jsou lide pripraveni bojovat s neprately za pomoci hrube sily.\n\n";
+    cout << " Gratuluji, stal jsi se valecnikem.\n\n Valecnici jsou lide pripraveni bojovat s neprately za pomoci hrube sily.\n Specialni schopnost: Zurivi utok - Poskozeni + 3\n\n";
+    Sleep(2000);
     Karel++;
     break;
 case 2:
+    inventar[3] = "Hul";
     Str = 2;
     Dex = 4;
     Con = 1;
@@ -90,10 +150,12 @@ case 2:
     Cha = 3;
     MaxHP = 5 + Con;
     AktHP = 5 + Con;
-    cout << " Gratuluji, stal jsi se kouzelnikem.\n\n Kouzelnici jsou krehci, ale neuveritelne nadani, magie jejich krehkost vyvazuje.\n\n";
+    cout << " Gratuluji, stal jsi se kouzelnikem.\n\n Kouzelnici jsou krehci, ale neuveritelne nadani, magie jejich krehkost vyvazuje.\n Specialni schopnost: Ohniva koule - ublizi nepriteli za 3 + Inteligence\n\n";
+    Sleep(2000);
     Karel++;
     break;
 case 3:
+    inventar[3] = "Luk";
     Str = 2;
     Dex = 5;
     Con = 3;
@@ -101,10 +163,12 @@ case 3:
     Cha = 1;
     MaxHP = 5 + Con;
     AktHP = 5 + Con;
-    cout << " Gratuluji, stal jsi se hranicarem.\n\n Hranicari jsou lide ve spojeni s prirodou a jejich primarni zbrani je luk.\n\n";
+    cout << " Gratuluji, stal jsi se hranicarem.\n\n Hranicari jsou lide ve spojeni s prirodou a jejich primarni zbrani je luk.\n Specialni schopnost: Trnovy slahoun - DoT 1\n\n";
+    Sleep(2000);
     Karel++;
     break;
 case 4:
+    inventar[3] = "Kytara";
     Str = 1;
     Dex = 4;
     Con = 2;
@@ -112,10 +176,12 @@ case 4:
     Cha = 5;
     MaxHP = 5 + Con;
     AktHP = 5 + Con;
-    cout << " Gratuluji, stal jsi se bardem.\n\n Bardi jsou lide, kteri misto boje pestmi bojuji slovi,jsou velmi znamy a oblibeni.\n\n";
+    cout << " Gratuluji, stal jsi se bardem.\n\n Bardi jsou lide, kteri misto boje pestmi bojuji slovi,jsou velmi znamy a oblibeni.\n Specialni schopnost: Predstaveni - Zmate nepritele\n\n";
+    Sleep(2000);
     Karel++;
     break;
 case 5:
+    inventar[3] = "Dyka";
     Str = 2;
     Dex = 5;
     Con = 1;
@@ -123,10 +189,12 @@ case 5:
     Cha = 4;
     MaxHP = 5 + Con;
     AktHP = 5 + Con;
-    cout << " Gratuluji, stal jsi se zlodejem.\n\n Zlodeji nevydrzi moc ran, ale jejich utoky jsou smrtelne.\n\n";
+    cout << " Gratuluji, stal jsi se zlodejem.\n\n Zlodeji nevydrzi moc ran, ale jejich utoky jsou smrtelne.\n Specialni schopnost: Schovani se - Schovate se do stinu\n\n";
+    Sleep(2000);
     Karel++;
     break;
 default:
+    inventar[3] = "Klacek";
     Str = 1;
     Dex = 4;
     Con = 2;
@@ -135,7 +203,8 @@ default:
     MaxHP = 5 + Con;
     AktHP = 5 + Con;
     if (y == 1){
-    cout << " Gratuluji, stal jsi se goblinem.\n\n Goblini jsou monstra, ktera neposlouchaji pravidla.\n Vetsinou bivaji prvnim monstrem ktere zacatecnici zabiji.\n\n";
+    cout << " Gratuluji, stal jsi se goblinem.\n\n Goblini jsou monstra, ktera neposlouchaji pravidla.\n Vetsinou bivaji prvnim monstrem ktere zacatecnici zabiji.\n Specialni schopnost: Monstrum - Sance vyhnout se souboji\n\n";
+    Sleep(2000);
     nastavBarvu(4);
     cout << "Toto povolani vam bylo prideleno podle vasi inteligence \n";
     nastavBarvu(7);
@@ -170,6 +239,8 @@ case 1:
     switch (anone){
         case 1:
             cout << " Za dvermi je schodiste branene krysou. Krysa na vas zautoci\n";
+            Krysa(StatyNepritelJedna[0],StatyNepritelJedna[1],StatyNepritelJedna[2],NazevNepritelJedna);
+            for (int i = 0; i <= 2; i++){cout << StatyNepritelJedna[i];}
             //souboj
             placeholder ++;
             break;
