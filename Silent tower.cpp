@@ -34,7 +34,7 @@ int AktMana;
 int MaxEnergie;
 int AktEnergie;
 int x;
-
+int josef;
 void GoblinEnmy(int &HPGoblin, int &DMGGoblin, int &OBRGoblin, string &NazevGoblin, int &OdmXP){
 HPGoblin = 10;
 DMGGoblin = 3;
@@ -162,6 +162,8 @@ if (AktHP <= 0){
 }while (KonSouboje == 0);
 }
 int main(){
+    SetConsoleOutputCP(CP_UTF8);
+josef = 1;
 int Karel = 0;
 int anone = 0;
 int placeholder = 0;
@@ -171,10 +173,12 @@ int y = 0;
 int pocet;
 int akce;
 do{
-cout << " Vytejte ve hre The Silent Tower\n\n";
+cout << " Výtejte ve hře The Silent Tower\n\n";
 y = 0;
 do{
-cout << " vyberte si postavu:\n\n 1 - Valecnik\n 2 - Kouzelnik\n 3 - Hranicar\n 4 - Bard\n 5 - Zlodej\n\n";
+do{
+cout << " Vyberte si postavu:\n\n 1 - Válečník\n 2 - Kouzelník\n 3 - Hraničář\n 4 - Bard\n 5 - Zloděj\n\n";
+    josef = 1;
 cin >> vyberclass;
 cout << endl;
 switch (vyberclass) {
@@ -185,7 +189,8 @@ case 1:
     Con = 5;
     Int = 2;
     Cha = 1;
-    cout << " Gratuluji, stal jsi se valecnikem.\n\n Valecnici jsou lide pripraveni bojovat s neprately za pomoci hrube sily.\n Specialni schopnost: Zurivi utok - Poskozeni + 3\n\n";
+    cout << " Gratuluji, stal jsi se válečníkem.\n\n Válečníci jsou lidé připravení bojovat s nepřátely za pomoci hrubé síly.\n Speciální schopnost: Zuřiví útok - Poškození + 3\n\n";
+    josef = 1;
     Sleep(1000);
     break;
 case 2:
@@ -195,7 +200,8 @@ case 2:
     Con = 1;
     Int = 5;
     Cha = 3;
-    cout << " Gratuluji, stal jsi se kouzelnikem.\n\n Kouzelnici jsou krehci, ale neuveritelne nadani, magie jejich krehkost vyvazuje.\n Specialni schopnost: Ohniva koule - ublizi nepriteli za 3 + Inteligence\n\n";
+    cout << " Gratuluji, stal jsi se kouzelníkem.\n\n Kouzelníci jsou křehcí, ale neuvěřitelně nadaní, magie jejich křehkost vyvažuje.\n Speciální schopnost: Ohnivá koule - ublíží nepříteli za 3 + Inteligence\n\n";
+    josef = 1;
     Sleep(1000);
     break;
 case 3:
@@ -205,7 +211,8 @@ case 3:
     Con = 3;
     Int = 4;
     Cha = 1;
-    cout << " Gratuluji, stal jsi se hranicarem.\n\n Hranicari jsou lide ve spojeni s prirodou a jejich primarni zbrani je luk.\n Specialni schopnost: Trnovy slahoun - DoT 1\n\n";
+    cout << " Gratuluji, stal jsi se hraničářem.\n\n Hraničáři jsou lidé ve spojení s přírodou a jejich primarní zbraní je luk.\n Speciální schopnost: Trnový šlahoun - DoT 1\n\n";
+    josef = 1;
     Sleep(1000);
     break;
 case 4:
@@ -215,7 +222,8 @@ case 4:
     Con = 2;
     Int = 3;
     Cha = 5;
-    cout << " Gratuluji, stal jsi se bardem.\n\n Bardi jsou lide, kteri misto boje pestmi bojuji slovi,jsou velmi znamy a oblibeni.\n Specialni schopnost: Predstaveni - Zmate nepritele\n\n";
+    cout << " Gratuluji, stal jsi se bardem.\n\n Bardi jsou lidé, kteří místo boje pěstmi bojují slovy, jsou velmy znamí a oblibení.\n Speciální schopnost: Představení - Zmate nepřítele\n\n";
+    josef = 1;
     Sleep(1000);
     break;
 case 5:
@@ -225,32 +233,36 @@ case 5:
     Con = 1;
     Int = 3;
     Cha = 4;
-    cout << " Gratuluji, stal jsi se zlodejem.\n\n Zlodeji nevydrzi moc ran, ale jejich utoky jsou smrtelne.\n Specialni schopnost: Schovani se - Schovate se do stinu\n\n";
+    cout << " Gratuluji, stal jsi se zlodějem.\n\n Zloději nevydrží moc ran, ale jejich útoky jsou smrtelné.\n Speciální schopnost: Schování se - Schováte se do stínu\n\n";
+    josef = 1;
     Sleep(1000);
     break;
 default:
+    if (y == 1){
     inventar[3] = "Klacek";
     Str = 1;
     Dex = 4;
     Con = 2;
     Int = 1;
     Cha = 1;
-    if (y == 1){
-    cout << " Gratuluji, stal jsi se goblinem.\n\n Goblini jsou monstra, ktera neposlouchaji pravidla.\n Vetsinou bivaji prvnim monstrem ktere zacatecnici zabiji.\n Specialni schopnost: Monstrum - Sance vyhnout se souboji\n\n";
+    cout << " Gratuluji, stal jsi se goblinem.\n\n Goblini jsou monstra, která neposlouchají pravidla.\n Většinou bývají prvním monstrem, které začátečníci zabijí.\n Speciální schopnost: Monstrum - Šance vyhnout se souboji\n\n";
     Sleep(1000);
     nastavBarvu(4);
-    cout << "Toto povolani vam bylo prideleno podle vasi inteligence \n";
+    cout << "Toto povolání vám bylo přiděleno podle vaší inteligence \n";
     nastavBarvu(7);
     Karel = 1;
     y = 2;
+    josef = 1;
     }else{
     y = 1;
     nastavBarvu(4);
-    cout << "!POZOR! Pokud si nevyberete z pripravenych povolani, bude volba provedena za vas.\n";
+    cout << "!POZOR! Pokud si nevyberete z připravených povolání, bude volba provedena za vás.\n";
     nastavBarvu(7);
+    josef = 0;
     }
     break;
 }
+}while (josef == 0);
 if (y == 2){
     MaxHP = 5 + Con;
     AktHP = 5 + Con;
@@ -258,15 +270,16 @@ if (y == 2){
     AktMana = 5 + Int;
     MaxEnergie = 5 + Dex;
     AktEnergie = 5 + Dex;
-    cout << " Vase vlastnosti jsou:\n";
-    cout << " sila: " << Str << endl;
+    cout << " Vaše vlastnosti jsou:\n";
+    cout << " síla: " << Str << endl;
     cout << " obratnost: " << Dex << endl;
     cout << " odolnost: " << Con << endl;
     cout << " inteligence: " << Int << endl;
     cout << " charisma: " << Cha << endl;
-    cout << " Aktualni zivoty: " << AktHP << "/" << MaxHP << endl << endl;
-    cout << " Aktualni energie: " << MaxEnergie << "/" << AktEnergie << endl << endl;
-    cout << " Aktualni mana: " << MaxMana << "/" << AktMana << endl << endl;
+    cout << " Aktualní životy: " << AktHP << "/" << MaxHP << endl << endl;
+    cout << " Aktualní energie: " << MaxEnergie << "/" << AktEnergie << endl << endl;
+    cout << " Aktualní mana: " << MaxMana << "/" << AktMana << endl << endl;
+    anone = 1;
 }else{
     MaxHP = 5 + Con;
     AktHP = 5 + Con;
@@ -274,15 +287,15 @@ if (y == 2){
     AktMana = 5 + Int;
     MaxEnergie = 5 + Dex;
     AktEnergie = 5 + Dex;
-    cout << " Vase vlastnosti jsou:\n";
-    cout << " sila: " << Str << endl;
+    cout << " Vaše vlastnosti jsou:\n";
+    cout << " síla: " << Str << endl;
     cout << " obratnost: " << Dex << endl;
     cout << " odolnost: " << Con << endl;
     cout << " inteligence: " << Int << endl;
     cout << " charisma: " << Cha << endl;
-    cout << " Aktualni zivoty: " << AktHP << "/" << MaxHP << endl;
-    cout << " Aktualni energie: " << AktEnergie << "/" << MaxEnergie << endl;
-    cout << " Aktualni mana: " << AktMana << "/" << MaxMana << endl;
+    cout << " Aktualní životy: " << AktHP << "/" << MaxHP << endl << endl;
+    cout << " Aktualní energie: " << MaxEnergie << "/" << AktEnergie << endl << endl;
+    cout << " Aktualní mana: " << MaxMana << "/" << AktMana << endl << endl;
     cout << "Jste si jisti svim vyberem? 1 - Ano 2 - Ne\n";
     cin >> anone;
     switch (anone){
@@ -300,40 +313,73 @@ default:
 }while (Karel == 0);
     cout << "_______________________________________________________________________________________________________________________";
     cout  << endl << endl;
-    cout << " Probouzite se v sede kamene mistnosti, uprostred mistnosti je maly ohen, ktery tuto mistnost slabe osvetluje.\n Na druhem konci mistnosti vidite dvere za kterymi neco vydava skrabave zvuky.\n\n";
+    cout << " Probouzíte se v šedé kamenné místnosti. Uprostřed místnosti hoří malý oheň, který ji slabě osvětluje. Na druhém konci místnosti vidíte dveře, za kterými něco vydává škrábavé zvuky."; //pouzito AI pro opravení chyb v již napsaném textu
 do{
-    cout << " Co chcete delat?\n\n 1 - Jit ke dverim\n 2 - Zustat sedet na zemi\n 3 - Pokusit si vzpomenout jak jste se sem dostali\n";
+    cout << " Co chcete dělat?\n\n 1 - Jít ke dveřím\n 2 - Zůstat sedět na zemi\n 3 - Pokusit si vzpomenout jak jste se sem dostali\n";
     cin >> akce;
     placeholder = 0;
 switch (akce){
 case 1:
-    cout << " Jdes smerem ke dverim, chces je otevrit? \n 1 - ano\n 0 - ne\n";
+    cout << " Jdeš směrem ke dveřím, chceš je otevřít? \n 1 - ano\n 2 - ne\n";
     cin >> anone;
     switch (anone){
         case 1:
-            cout << " Za dvermi je schodiste branene krysou. Krysa na vas zautoci\n";
+            cout << " Za dveřmi je schodiště bráněné krysou. Krysa na vás zaútočí\n";
             Krysa(StatyNepritelJedna[0],StatyNepritelJedna[1],StatyNepritelJedna[2],NazevNepritelJedna,StatyNepritelJedna[3]);
             SoubojJedna();
             placeholder = 1;
             break;
-        case 0:
-            cout << " rozhodli jste se ze je vam jedno co se deje za dvermi.\n Vracite se k ohni. co chcete delat dal?\n";
+        case 2:
+            cout << " Rozhodli jste se že je vám jedno co se děje za dveřmi.\n Vracíte se k ohni. co chcete dělat dál?\n";
             break;
         default:
-            cout << " neplatna volba. zkus znovu\n";
+            cout << " neplatná volba. zkus znovu\n";
             break;
     }
     break;
 case 2:
-    cout << " Zustavate sedet na zemi... zem je tvrda a studena, zjevne kamen.";
+    cout << " Zůstáváte sedět na zemi... zem je tvrdá a studená, zjevně kámen.";
     break;
 case 3:
-    cout << " Snazite se premislet nad tim jak jste se sem dostali a proc tu vlastne jste.\n Jak tak premislite zjistite ze nejste schopni vzpomenout si na vase jmeno\n\n Zadejte jak se budete jmenovat: ";
+    cout << " Snažíte se přemýšlet nad tím jak jste se sem dostali a proč tu vlastně jste.\n Jak tak přemýšlíte zjistíte že nejste schopni vzpomenout si na vaše jméno\n\n Zadejte jak se budete jmenovat: ";
     cin >> jmeno;
 }
 }while (placeholder == 0);
-cout << " Porazili jste krysu, Jedina cesta dal je schodiste, chcete jit po schodech nahoru? 1 - Ano 2 - Ne\n";
+cout << " Porazili jste krysu, Jediná cesta dál je schodiště, chcete jít po schodech nahoru? 1 - Ano 2 - Ne\n";
+cin >> anone;
+switch (anone) {
+case 1:
+    cout << " Pokračujete dál po schodech. Jakmile dorazíte po schodech nahoru všimnete si dveří, z pod kterých svítí příjemná žlutá záře.\n\n Chcete je otevřít?\n 1 - Ano\n 2 - Ne\n";
+    cin >> anone;
+    switch (anone){
+    case 1:
+        cout << " Za dveřmi je středně velká místnost osvětlená loučemi, na protější straně leží sýr... co chcete delat?\n\n 1 - Jít k sýru a prosokumat ho\n 2 - Vrátit se po schodech dolů\n 3 - Zůstat stát\n 4 - Jít ke dveřím na druhé straně místnosti\n";
+        cin >> akce;
+        switch (akce){
+        case 1:
+            cout << " Prozkoumáváš sír, zatím co koukáš na sír nevšimneš si krysi, která na tebe zaútočí.";
+            Krysa(StatyNepritelJedna[0],StatyNepritelJedna[1],StatyNepritelJedna[2],NazevNepritelJedna,StatyNepritelJedna[3]);
+            SoubojJedna();
+            break;
+        case 2:
+            cout << " Vrátíš se po schodech dolů, mrtvola krysi stále leží dole na schodišti. co chceš dělat? \n 1 - Vrátit se po schodech nahoru \n 2 - Pohřbít krysu \n 3 - Vrátit se k ohni\n";
+            cin >> akce;
+            switch (akce){
+            case 1:
+                cout << " Vracíš se zpátky po schodech nahoru\n";
+                break;
+            case 2:
+                cout << " Z kamínků a dalších malích předmětů, co jsi našel ležet po místonsti, jsi zhotovil malou mohylu co chceš dělat dál? ";
+            }
+        }
+    }
+    break;
+case 2:
+break;
 
+
+
+}
 placeholder = 0;
 }while (placeholder == 1);
 }
