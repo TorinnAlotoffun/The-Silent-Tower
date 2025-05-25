@@ -2,17 +2,16 @@
 #include <windows.h>
 #include <cstdlib>
 #include <ctime>
+#include <cctype>
 #include <stdlib.h> //Zdroj -> https://learn.microsoft.com/cs-cz/cpp/cpp/program-termination?view=msvc-170 Vyuziti -> Ukonceni Programu
 using namespace std;
 int AktHP;
 int KonSouboje = 0;
-int Schovany = 0;
-int Zmateni = 0;
 string NazevNepritelJedna;
 string jmeno = "hrdina";
-int StatyNepritelJedna[4];
-int StatyNepritelDva[4];
-int StatyNepritelTri[4];
+int StatyNepritelJedna[5];
+int StatyNepritelDva[5];
+int StatyNepritelTri[5];
 int MaxHP;
 int Dmg;
 int poskozeni;
@@ -23,7 +22,7 @@ int Int;
 int Cha;
 int Con;
 int Penize;
-string inventar[10] = {"lektvar leceni", "20zlatych"};
+string inventar[10] = {"lektvar leceni",};
 int uprinv = 0;
 int konec = 0;
 int loot;
@@ -35,26 +34,29 @@ int MaxEnergie;
 int AktEnergie;
 int x;
 int josef;
-void GoblinEnmy(int &HPGoblin, int &DMGGoblin, int &OBRGoblin, string &NazevGoblin, int &OdmXP){
+void GoblinEnmy(int &HPGoblin, int &DMGGoblin, int &OBRGoblin, string &NazevGoblin, int &OdmXP, int &OdmPrachy){
 HPGoblin = 10;
 DMGGoblin = 3;
 OBRGoblin = 4;
 NazevGoblin = "Goblin";
 OdmXP = 5;
+OdmPrachy = 10;
 }
-void Krysa(int &HPKrysa, int &DMGKrysa, int &OBRKrysa, string &NazevKrysy, int &OdmXP){
+void Krysa(int &HPKrysa, int &DMGKrysa, int &OBRKrysa, string &NazevKrysy, int &OdmXP, int &OdmPrachy){
 HPKrysa = 5;
 DMGKrysa = 1;
 OBRKrysa = 3;
 NazevKrysy = "Krysa";
 OdmXP = 1;
+OdmPrachy = 5;
 }
-void Kostlivec(int &HPKostlivec, int &DMGKostlivec, int &OBRKostlivec, string &NazevKostlivec, int &OdmXP){
+void Kostlivec(int &HPKostlivec, int &DMGKostlivec, int &OBRKostlivec, string &NazevKostlivec, int &OdmXP, int &OdmPrachy){
 HPKostlivec = 10;
 DMGKostlivec = 5;
 OBRKostlivec = 5;
 NazevKostlivec = "Kostlivec";
 OdmXP = 10;
+OdmPrachy = 20;
 }
 void Hul(){
 Dmg = Dex + 2;
@@ -70,16 +72,9 @@ Dmg = Dex + 2;
 }
 void Dyka(){
 Dmg = Dex + 2;
-if (Schovany == 1){
-    Dmg = Dmg + 2;
-}
 }
 void Kytara(){
-
 Dmg = Dex + 2;
-if (Zmateni == 1){
-    Dmg = Cha + 2;
-}
 }
 void Klacek() {
 Dmg = Str + 1;
@@ -123,9 +118,23 @@ HpNepritele = HpNepritele - poskozeni;
 }
 
 void SoubojJedna(){
-Inventar();
 KonSouboje = 0;
 cout << " Pred vami je " << NazevNepritelJedna << "\n";
+if (inventar[3] == "Mec"){
+    Mec();
+}else if (inventar[3] == "Hul"){
+    Hul();
+}else if (inventar[3] == "Sekera"){
+    Sekera();
+}else if (inventar[3] == "Luk"){
+    Luk();
+}else if (inventar[3] == "Dyka"){
+    Dyka();
+}else if (inventar[3] == "Kytara"){
+    Kytara();
+}else if (inventar[3] == "Klacek"){
+    Klacek();
+}
 do{
 cout << " Co chcete delat?\n 1 - Utok\n 2 - Inventar\n 3 - Specialni schopnosti\n 4 - Pockat\n";
 cin >> FightAkce;
@@ -136,7 +145,7 @@ case 1:
     cout << "Vas nepritel ma jeste: " << StatyNepritelJedna[0] << " zivotu\n";
     break;
 case 2:
-    cout << "Inventar";
+    cout << "Inventar\n";
     Inventar();
     break;
 case 3:
@@ -149,8 +158,10 @@ case 4:
 cout << "Gratuluji zabyl jsi " << NazevNepritelJedna << endl;
 cout << "Ziskal jsi " << StatyNepritelJedna[3] << " zkusenosti\n";
 xp = xp + StatyNepritelJedna[3];
+cout << "Ziskal jsi " << StatyNepritelJedna[4] << "Zlatych\n";
+Penize = Penize + StatyNepritelJedna[4];
 KonSouboje = 1;
-}
+}else{
 cout << NazevNepritelJedna << " na vas zautoci.\n";
 Attack(Dex,StatyNepritelJedna[1],AktHP);
 cout << "Zasah za " << poskozeni << " zivotu\n";
@@ -158,6 +169,7 @@ cout << "Vase aktualni zivoty jsou " << AktHP << "/" << MaxHP <<endl;
 if (AktHP <= 0){
     cout << "Zemrel jsi.\n";
     KonSouboje = 1;
+}
 }
 }while (KonSouboje == 0);
 }
@@ -325,7 +337,7 @@ case 1:
     switch (anone){
         case 1:
             cout << " Za dveřmi je schodiště bráněné krysou. Krysa na vás zaútočí\n";
-            Krysa(StatyNepritelJedna[0],StatyNepritelJedna[1],StatyNepritelJedna[2],NazevNepritelJedna,StatyNepritelJedna[3]);
+            Krysa(StatyNepritelJedna[0],StatyNepritelJedna[1],StatyNepritelJedna[2],NazevNepritelJedna,StatyNepritelJedna[3],StatyNepritelJedna[4]);
             SoubojJedna();
             placeholder = 1;
             break;
@@ -342,7 +354,9 @@ case 2:
     break;
 case 3:
     cout << " Snažíte se přemýšlet nad tím jak jste se sem dostali a proč tu vlastně jste.\n Jak tak přemýšlíte zjistíte že nejste schopni vzpomenout si na vaše jméno\n\n Zadejte jak se budete jmenovat: ";
-    cin >> jmeno;
+    cin.ignore(); //Rada od umělé inteligence. Řeší problém s tím, že mi nešlo zapsat nové jméno přes getline.
+    getline(cin, jmeno);
+    cout << "vase jmeno je " << jmeno;
 }
 }while (placeholder == 0);
 cout << " Porazili jste krysu, Jediná cesta dál je schodiště, chcete jít po schodech nahoru? 1 - Ano 2 - Ne\n";
@@ -358,7 +372,7 @@ case 1:
         switch (akce){
         case 1:
             cout << " Prozkoumáváš sír, zatím co koukáš na sír nevšimneš si krysi, která na tebe zaútočí.";
-            Krysa(StatyNepritelJedna[0],StatyNepritelJedna[1],StatyNepritelJedna[2],NazevNepritelJedna,StatyNepritelJedna[3]);
+            Krysa(StatyNepritelJedna[0],StatyNepritelJedna[1],StatyNepritelJedna[2],NazevNepritelJedna,StatyNepritelJedna[3],StatyNepritelDva[4]);
             SoubojJedna();
             break;
         case 2:
