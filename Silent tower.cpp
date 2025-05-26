@@ -7,7 +7,10 @@
 using namespace std;
 int AktHP;
 int KonSouboje = 0;
+string Zbran;
 string NazevNepritelJedna;
+string NazevNepritelDva;
+string NazevNepritelTri;
 string jmeno = "hrdina";
 int StatyNepritelJedna[5];
 int StatyNepritelDva[5];
@@ -22,6 +25,7 @@ int Int;
 int Cha;
 int Con;
 int Penize;
+int JsiMonstrum = 0;
 string inventar[10] = {"lektvar leceni",};
 int uprinv = 0;
 int konec = 0;
@@ -34,6 +38,7 @@ int MaxEnergie;
 int AktEnergie;
 int x;
 int josef;
+int Special;
 void GoblinEnmy(int &HPGoblin, int &DMGGoblin, int &OBRGoblin, string &NazevGoblin, int &OdmXP, int &OdmPrachy){
 HPGoblin = 10;
 DMGGoblin = 3;
@@ -94,9 +99,6 @@ case 2:
     cout << "na jakem miste se nachazi predmet, ktery chcete pouzit?\n";
     cin >> x;
     cout << "Jste si jisti ze chcete " << inventar[x] << " pouzit?\n";
-    if (x == 3){
-        Mec();
-    }
     break;
 case 3:
     konec = 1;
@@ -116,23 +118,32 @@ poskozeni = DmgUtok - ObranaNepritele;
 if (poskozeni <= 0) {poskozeni = 1;}
 HpNepritele = HpNepritele - poskozeni;
 }
-
+void ZuriviUtok(int Energ, int DmgZurUtk, int &ObranaCile, int &HPCile){
+    if (Energ <= 0){
+        cout << "Nemas dost enregie";
+    }else{
+AktEnergie--;
+cout << " Pouzivas zurivi utok\n";
+DmgZurUtk = DmgZurUtk + 3;
+Attack(ObranaCile, DmgZurUtk, HPCile);
+    }
+    }
 void SoubojJedna(){
 KonSouboje = 0;
 cout << " Pred vami je " << NazevNepritelJedna << "\n";
-if (inventar[3] == "Mec"){
+if (Zbran == "Mec"){
     Mec();
-}else if (inventar[3] == "Hul"){
+}else if (Zbran == "Hul"){
     Hul();
-}else if (inventar[3] == "Sekera"){
+}else if (Zbran == "Sekera"){
     Sekera();
-}else if (inventar[3] == "Luk"){
+}else if (Zbran == "Luk"){
     Luk();
-}else if (inventar[3] == "Dyka"){
+}else if (Zbran == "Dyka"){
     Dyka();
-}else if (inventar[3] == "Kytara"){
+}else if (Zbran == "Kytara"){
     Kytara();
-}else if (inventar[3] == "Klacek"){
+}else if (Zbran == "Klacek"){
     Klacek();
 }
 do{
@@ -150,6 +161,10 @@ case 2:
     break;
 case 3:
     cout << "Special";
+    ZuriviUtok(AktEnergie, Dmg, StatyNepritelJedna[2],StatyNepritelJedna[0]);
+    cout << "Zasah za " << poskozeni << " zivoty\n";
+    cout << "Vas nepritel ma jeste: " << StatyNepritelJedna[0] << " zivotu\n";
+    break;
     break;
 case 4:
     cout << "Wait";
@@ -158,7 +173,7 @@ case 4:
 cout << "Gratuluji zabyl jsi " << NazevNepritelJedna << endl;
 cout << "Ziskal jsi " << StatyNepritelJedna[3] << " zkusenosti\n";
 xp = xp + StatyNepritelJedna[3];
-cout << "Ziskal jsi " << StatyNepritelJedna[4] << "Zlatych\n";
+cout << "Ziskal jsi " << StatyNepritelJedna[4] << " Zlatych\n";
 Penize = Penize + StatyNepritelJedna[4];
 KonSouboje = 1;
 }else{
@@ -195,29 +210,30 @@ cin >> vyberclass;
 cout << endl;
 switch (vyberclass) {
 case 1:
-    inventar[3] = "Mec";
-    Str = 4;
+    Zbran = "Mec";
+    Str = 5;
     Dex = 3;
     Con = 5;
-    Int = 2;
+    Int = 1;
     Cha = 1;
     cout << " Gratuluji, stal jsi se válečníkem.\n\n Válečníci jsou lidé připravení bojovat s nepřátely za pomoci hrubé síly.\n Speciální schopnost: Zuřiví útok - Poškození + 3\n\n";
+    Special = 1;
     josef = 1;
     Sleep(1000);
     break;
 case 2:
-    inventar[3] = "Hul";
-    Str = 2;
-    Dex = 4;
+    Zbran = "Hul";
+    Str = 1;
+    Dex = 3;
     Con = 1;
-    Int = 5;
-    Cha = 3;
+    Int = 6;
+    Cha = 4;
     cout << " Gratuluji, stal jsi se kouzelníkem.\n\n Kouzelníci jsou křehcí, ale neuvěřitelně nadaní, magie jejich křehkost vyvažuje.\n Speciální schopnost: Ohnivá koule - ublíží nepříteli za 3 + Inteligence\n\n";
     josef = 1;
     Sleep(1000);
     break;
 case 3:
-    inventar[3] = "Luk";
+    Zbran = "Luk";
     Str = 2;
     Dex = 5;
     Con = 3;
@@ -228,7 +244,7 @@ case 3:
     Sleep(1000);
     break;
 case 4:
-    inventar[3] = "Kytara";
+    Zbran = "Kytara";
     Str = 1;
     Dex = 4;
     Con = 2;
@@ -239,7 +255,7 @@ case 4:
     Sleep(1000);
     break;
 case 5:
-    inventar[3] = "Dyka";
+    Zbran = "Dyka";
     Str = 2;
     Dex = 5;
     Con = 1;
@@ -251,7 +267,8 @@ case 5:
     break;
 default:
     if (y == 1){
-    inventar[3] = "Klacek";
+    Zbran = "Klacek";
+    JsiMonstrum = 1;
     Str = 1;
     Dex = 4;
     Con = 2;
@@ -276,12 +293,13 @@ default:
 }
 }while (josef == 0);
 if (y == 2){
-    MaxHP = 5 + Con;
-    AktHP = 5 + Con;
-    MaxMana = 5 + Int;
-    AktMana = 5 + Int;
-    MaxEnergie = 5 + Dex;
-    AktEnergie = 5 + Dex;
+    Penize = 5;
+    MaxHP = 3 + Con;
+    AktHP = 3 + Con;
+    MaxMana = 3 + Int;
+    AktMana = 3 + Int;
+    MaxEnergie = 3 + Con;
+    AktEnergie = 3 + Con;
     cout << " Vaše vlastnosti jsou:\n";
     cout << " síla: " << Str << endl;
     cout << " obratnost: " << Dex << endl;
@@ -293,12 +311,13 @@ if (y == 2){
     cout << " Aktualní mana: " << MaxMana << "/" << AktMana << endl << endl;
     anone = 1;
 }else{
+    Penize = 10;
     MaxHP = 5 + Con;
     AktHP = 5 + Con;
     MaxMana = 5 + Int;
     AktMana = 5 + Int;
-    MaxEnergie = 5 + Dex;
-    AktEnergie = 5 + Dex;
+    MaxEnergie = 5 + Con;
+    AktEnergie = 5 + Con;
     cout << " Vaše vlastnosti jsou:\n";
     cout << " síla: " << Str << endl;
     cout << " obratnost: " << Dex << endl;
@@ -310,6 +329,7 @@ if (y == 2){
     cout << " Aktualní mana: " << MaxMana << "/" << AktMana << endl << endl;
     cout << "Jste si jisti svim vyberem? 1 - Ano 2 - Ne\n";
     cin >> anone;
+}
     switch (anone){
 case 1:
     Karel = 1;
@@ -321,7 +341,7 @@ default:
     cout << "Neplatny vyber";
     break;
     }
-}
+
 }while (Karel == 0);
     cout << "_______________________________________________________________________________________________________________________";
     cout  << endl << endl;
