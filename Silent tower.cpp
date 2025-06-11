@@ -5,6 +5,7 @@
 #include <cctype>
 #include <stdlib.h> //Zdroj -> https://learn.microsoft.com/cs-cz/cpp/cpp/program-termination?view=msvc-170 Vyuziti -> Ukonceni Programu
 using namespace std;
+int Podminka = 0;
 int omracen;
 int Omamen;
 int DoT;
@@ -17,9 +18,7 @@ string NazevNepritelJedna;
 string NazevNepritelDva;
 string NazevNepritelTri;
 string jmeno = "hrdina";
-int StatyNepritelJedna[6]; //0 = HP, 1 = Dmg, 2 = Obrana, 3 = XP, 4 = Prachy, 5 = Oznacen?
-int StatyNepritelDva[6];
-int StatyNepritelTri[6];
+int StatyNepritel[3][6]; //0 = HP, 1 = Dmg, 2 = Obrana, 3 = XP, 4 = Prachy, 5 = Oznacen?
 int MaxHP;
 int Dmg;
 int poskozeni;
@@ -30,7 +29,7 @@ int Int;
 int Cha;
 int Con;
 int Penize;
-string inventar[10] = {"lektvar leceni",};
+string inventar[5] = {"Lektvar léčení ", " - ", " - ", " - ", " - "};
 int uprinv = 0;
 int konec = 0;
 int loot;
@@ -50,9 +49,13 @@ int schopnosti[6][3] = {
     {4,5,6}, //Kouzelnik - Magicka strela, Ohniva koule, Draci dech
     {7,8,9}, //Hranicar - Trnovy slahoun, dvojta strela, Lovcovo znameni
     {10,11,12}, //Bard - Zlomyslny vysmech, Omameni, Tanec boje
-    {13,14,15}, //Zlodej - Schovani se, Utok ze zalohy, Mistr stinu
+    {13,14,15}, //Zlodej - Schovani se, Utok ze zalohy, Mistr Jedu
     {16,17,18} //Goblin - Monstrum, Hbyte ruce, Zurivost malych
 };
+void LektvarLeceni(){
+AktHP = AktHP + 3;
+if(AktHP > MaxHP){AktHP = MaxHP;}
+}
 void GoblinEnmy(int &HPGoblin, int &DMGGoblin, int &OBRGoblin, string &NazevGoblin, int &OdmXP, int &OdmPrachy){
 HPGoblin = 10;
 DMGGoblin = 3;
@@ -100,28 +103,29 @@ Dmg = Str + 1;
 }
 void Inventar(){
 do{
-    for (int i;i <= 10;i++){
+    for (int i;i <= 5;i++){
         cout << inventar[i] << " ";
     }
-    cout << " Co chcete delat?\n 1 - Zahodit predmet \n 2 - Pouzit predmet \n 3 - Ukocit\n";
+    cout << " Co chcete dělat?\n 1 - Zahodit předmět \n 2 - Použít předmět \n 3 - Ukončit\n";
     cin >> uprinv;
     switch (uprinv) {
 case 1:
-    cout << "zahodit \n";
+    cout << " zahodit \n";
     break;
 case 2:
-    cout << "na jakem miste se nachazi predmet, ktery chcete pouzit?\n";
+    cout << " Na jakém místě se nachází předmět, který chcete použít?\n";
     cin >> x;
-    cout << "Jste si jisti ze chcete " << inventar[x] << " pouzit?\n";
+    cout << "Jste si jisti že chcete " << inventar[x] << " použít?\n";
     break;
 case 3:
     konec = 1;
     break;
 default:
-    cout << "Neplatny vyber \n";
+    cout << "Neplatný výběr \n";
 }
 }while (konec = 0);
 }
+void FullHeal(){AktHP = MaxHP;}
 void nastavBarvu(int barva) {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(hConsole, barva);
@@ -134,7 +138,7 @@ HpNepritele = HpNepritele - poskozeni;
 }
 void ZuriviUtok(int Energ, int DmgZurUtk, int &ObranaCile, int &HPCile){
     if (Energ <= 0){
-        cout << "Nemas dost enregie\n";
+        cout << "Nemáš dost enregie\n";
     }else{
 AktEnergie--;
 cout << " Používáš zuřiví útok\n";
@@ -145,10 +149,10 @@ Attack(ObranaCile, DmgZurUtk, HPCile);
 }
 void OmracUtok(int Energ, int DmgOmracUtk, int &ObranaCile, int &HPCile){
     if (Energ <= 4){
-        cout << "Nemas dost enregie\n";
+        cout << "Nemáš dost enregie\n";
     }else{
 AktEnergie = AktEnergie - 5;
-cout << " Pouzivas omracujici utok\n";
+cout << " Používáš omračující útok\n";
 DmgOmracUtk = DmgOmracUtk + 2;
 Attack(ObranaCile, DmgOmracUtk, HPCile);
     omracen = 1;
@@ -157,10 +161,10 @@ Attack(ObranaCile, DmgOmracUtk, HPCile);
 }
 void ZuriviRev(int Energ,int Str, int ObranaCile, int &DmgZurRev){
     if (Energ <= 9){
-        cout << "Nemas dost Energie\n";
+        cout << "Nemáš dost energie\n";
     }else{
 AktEnergie = AktEnergie - 10;
-cout << " Pouzivas zurivi rev\n";
+cout << " Používáš zuřiví řev\n";
 DmgZurRev = Str + 5 - ObranaCile;
     omracen = 1;
     pomocnapromena = 0;
@@ -169,10 +173,10 @@ DmgZurRev = Str + 5 - ObranaCile;
 void MagickaStrela(int Mag, int Int, int &ObranaCile, int &HPCile){
     int DmgMagStrel;
     if (Mag <= 0){
-        cout << "Nemas dost Many\n";
+        cout << "Nemáš dost many\n";
     }else{
 AktMana--;
-cout << "Pouzivas Magickou strelu\n";
+cout << "Používáš Magickou střelu\n";
 DmgMagStrel = Int + 1;
 Attack(ObranaCile, DmgMagStrel, HPCile);
     pomocnapromena = 0;
@@ -181,10 +185,10 @@ Attack(ObranaCile, DmgMagStrel, HPCile);
 void OhnivaKoule(int Mag, int Int, int &Damage, int PocetNepratel){
     int DmgOK = 0;
     if (Mag <= 4){
-        cout << "Nemas dost Many\n";
+        cout << "Nemáš dost many\n";
     }else{
 AktMana = AktMana - 5;
-cout << "Pouzivas Ohnivou kouli\n";
+cout << "Používáš Ohnivou kouli\n";
 DmgOK = Int + 3;
 Damage = DmgOK / PocetNepratel;
     pomocnapromena = 0;
@@ -193,20 +197,20 @@ Damage = DmgOK / PocetNepratel;
 void DraciDech(int Mag, int Int, int &Damage){
     int DmgOK = 0;
     if (Mag <= 9){
-        cout << "Nemas dost Many\n";
+        cout << "Nemáš dost many\n";
     }else{
 AktMana = AktMana - 10;
-cout << "Pouzivas Draci Dech\n";
+cout << "Používáš Dračí Dech\n";
 DmgOK = Int + 3;
     pomocnapromena = 0;
 }
 }
 void TrnovySlahoun(int Mag){
     if (Mag <= 0){
-        cout << "Nemas dost Many\n";
+        cout << "Nemáš dost many\n";
     }else{
 AktMana = AktMana - 1;
-cout << "Pouzivas Trnovy slahoun\n";
+cout << "Používáš Trnový šlahoun\n";
 DoT = 1;
     pomocnapromena = 0;
 }
@@ -214,10 +218,10 @@ DoT = 1;
 void ZlomyslnyVysmech(int Mag, int Cha, int &ObranaCile, int &HPCile){
     int DmgZloVysm;
     if (Mag <= 0){
-        cout << "Nemas dost Many\n";
+        cout << "Nemáš dost many\n";
     }else{
 AktMana--;
-cout << "Pouzivas Zlomyslny vysmech\n";
+cout << "Používáš Zlomyslný výsměch\n";
 DmgZloVysm = Cha + 1;
 Attack(ObranaCile, DmgZloVysm, HPCile);
     pomocnapromena = 0;
@@ -225,20 +229,20 @@ Attack(ObranaCile, DmgZloVysm, HPCile);
 }
 void Omameni(int Mag, int Cha){
     if (Mag <= 4){
-        cout << "Nemas dost Many\n";
+        cout << "Nemáš dost many\n";
     }else{
 AktMana = AktMana - 5;
-cout << "Pouzivas Omameni\n";
+cout << "Používáš Omámení\n";
 Omamen = Cha;
     pomocnapromena = 0;
     }
 }
 void TanecBoje(int Mag, int Cha){
     if (Mag <= 9){
-        cout << "Nemas dost Many\n";
+        cout << "Nemáš dost many\n";
     }else{
 AktMana = AktMana - 10;
-cout << "Pouzivas Tanec Boje\n";
+cout << "Používáš Tanec Boje\n";
 Dmg = Cha + Dex;
     pomocnapromena = 0;
     }
@@ -247,21 +251,46 @@ void SchovaniSe(){
 Schovan = 1;
 pomocnapromena = 0;
 }
+void UtokZeZalohy(int DmgSneakUtk, int &ObranaCile, int &HPCile){
+if(Schovan == 0){
+cout << " Nejsi schovaný\n";
+}else{
+DmgSneakUtk = DmgSneakUtk + 5;
+Attack(ObranaCile,DmgSneakUtk,HPCile);
+Schovan = 0;
+pomocnapromena = 0;
+}
+}
+void MistrJedu(){
+if(Schovan == 0){
+cout << " Nejsi schovaný\n";
+}else{
+DoT = 2;
+pomocnapromena = 0;
+}
+}
 void Monstrum(){
 srand(time(0));
 int NahodneCislo = rand() % 10 + 1;
 if(NahodneCislo == 6){
-    cout << "Nepritel vas necha na pokoji\n";
+    cout << "Nepřítel vás nechá napokoji\n";
     KonSouboje = 1;
     pomocnapromena = 0;
 }
 }
+void HbyteRuce(int &Odmena){
+Odmena = Odmena + 5;
+}
+void FuryOfTheBall(){
+Dmg = Dmg + 5;
+}
 
 void SoubojJedna(){
 PocetEnemy = 1;
+Schovan = 0;
 DoT = 0;
 KonSouboje = 0;
-cout << " Pred vami je " << NazevNepritelJedna << "\n";
+cout << " Před vámi je " << NazevNepritelJedna << "\n";
 if (Zbran == "Mec"){
     Mec();
 }else if (Zbran == "Hul"){
@@ -287,69 +316,84 @@ cout << " Co chcete delat?\n 1 - Utok\n 2 - Inventar\n 3 - Specialni schopnosti\
 cin >> FightAkce;
 switch (FightAkce){
 case 1:
-    if (StatyNepritelJedna[5] == 1) {Dmg = Dmg + 4;}
-    Attack(StatyNepritelJedna[2],Dmg,StatyNepritelJedna[0]);
-    cout << "Zasah za " << poskozeni << " zivoty\n";
-    cout << "Vas nepritel ma jeste: " << StatyNepritelJedna[0] << " zivotu\n";
+    if (StatyNepritel[0][5] == 1) {Dmg = Dmg + 4;}
+    Attack(StatyNepritel[0][2],Dmg,StatyNepritel[0][0]);
+    cout << "Zásah za " << poskozeni << " životy\n";
+    cout << "Váš nepřítel má ještě: " << StatyNepritel[0][0] << " životů\n";
     pomocnapromena = 0;
     Schovan = 0;
     Omamen = 0;
     break;
 case 2:
-    cout << " Inventar\n";
+    cout << " Inventář\n";
     Inventar();
     pomocnapromena = 0;
     break;
 case 3:
+    do{
+    if (lvl >= 10){
     cout << " Na jaké pozici je schopnost kterou chceš použít? (0,1,2)\n";
     cin >> SchopnostLvl;
+    }else if(lvl < 10 && lvl > 5){
+    cout << " Na jaké pozici je schopnost kterou chceš použít? (0,1)\n";
+    cin >> SchopnostLvl;
+    if(SchopnostLvl < 0 || SchopnostLvl > 2){
+        cout << "Neplatný výběr\n";
+        pomocnapromena = 1;
+    }else{
+        pomocnapromena = 0;
+    }
+    }else{
+    SchopnostLvl = 0;
+    }
+    }while(pomocnapromena == 1);
     switch (schopnosti[SchopnostiClass][SchopnostLvl]){
         case 1:
-    ZuriviUtok(AktEnergie, Dmg, StatyNepritelJedna[2],StatyNepritelJedna[0]);
+    ZuriviUtok(AktEnergie, Dmg, StatyNepritel[0][2],StatyNepritel[0][0]);
     cout << "Zasah za " << poskozeni << " zivoty\n";
-    cout << "Vas nepritel ma jeste: " << StatyNepritelJedna[0] << " zivotu\n";
+    cout << "Vas nepritel ma jeste: " << StatyNepritel[0][0] << " zivotu\n";
     break;
         case 2:
-    OmracUtok(AktEnergie, Dmg, StatyNepritelJedna[2],StatyNepritelJedna[0]);
+    OmracUtok(AktEnergie, Dmg, StatyNepritel[0][2],StatyNepritel[0][0]);
     cout << "Zasah za " << poskozeni << " zivoty\n";
-    cout << "Vas nepritel ma jeste: " << StatyNepritelJedna[0] << " zivotu\n";
+    cout << "Vas nepritel ma jeste: " << StatyNepritel[0][0] << " zivotu\n";
     break;
         case 3:
-    ZuriviRev(AktEnergie, Str,StatyNepritelJedna[2],poskozeni);
-    StatyNepritelJedna[0] = StatyNepritelJedna[0] - poskozeni;
+    ZuriviRev(AktEnergie, Str,StatyNepritel[0][2],poskozeni);
+    StatyNepritel[0][0] = StatyNepritel[0][0] - poskozeni;
     cout << "Zasah za " << poskozeni << " zivoty\n";
-    cout << "Vas nepritel ma jeste: " << StatyNepritelJedna[0] << " zivotu\n";
+    cout << "Vas nepritel ma jeste: " << StatyNepritel[0][0] << " zivotu\n";
     break;
         case 4:
-        MagickaStrela(AktMana, Int, StatyNepritelJedna[2],StatyNepritelJedna[0]);
+        MagickaStrela(AktMana, Int, StatyNepritel[0][2],StatyNepritel[0][0]);
     cout << "Zasah za " << poskozeni << " zivoty\n";
-    cout << "Vas nepritel ma jeste: " << StatyNepritelJedna[0] << " zivotu\n";
+    cout << "Vas nepritel ma jeste: " << StatyNepritel[0][0] << " zivotu\n";
     break;
         case 5:
     OhnivaKoule(AktMana, Int, poskozeni, PocetEnemy);
-    StatyNepritelJedna[0] = StatyNepritelJedna[0] - poskozeni;
+    StatyNepritel[0][0] = StatyNepritel[0][0] - poskozeni;
     cout << "Zasah za " << poskozeni << " zivoty\n";
-    cout << "Vas nepritel ma jeste: " << StatyNepritelJedna[0] << " zivotu\n";
+    cout << "Vas nepritel ma jeste: " << StatyNepritel[0][0] << " zivotu\n";
     break;
         case 6:
     DraciDech(AktMana, Int, poskozeni);
-    StatyNepritelJedna[0] = StatyNepritelJedna[0] - poskozeni;
+    StatyNepritel[0][0] = StatyNepritel[0][0] - poskozeni;
     cout << "Zasah za " << poskozeni << " zivoty\n";
-    cout << "Vas nepritel ma jeste: " << StatyNepritelJedna[0] << " zivotu\n";
+    cout << "Vas nepritel ma jeste: " << StatyNepritel[0][0] << " zivotu\n";
     break;
         case 7:
     TrnovySlahoun(AktMana);
     break;
         case 8:
     if (AktEnergie <= 4){cout << "Nemas dost energie\n";}else{
-    if (StatyNepritelJedna[5] == 1) {Dmg = Dmg + 4;}
-    Attack(StatyNepritelJedna[2],Dmg,StatyNepritelJedna[0]);
+    if (StatyNepritel[0][5] == 1) {Dmg = Dmg + 4;}
+    Attack(StatyNepritel[0][2],Dmg,StatyNepritel[0][0]);
     cout << "Zasah za " << poskozeni << " zivoty\n";
-    cout << "Vas nepritel ma jeste: " << StatyNepritelJedna[0] << " zivotu\n";
-    if (StatyNepritelJedna[5] == 1) {Dmg = Dmg + 4;}
-    Attack(StatyNepritelJedna[2],Dmg,StatyNepritelJedna[0]);
+    cout << "Vas nepritel ma jeste: " << StatyNepritel[0][0] << " zivotu\n";
+    if (StatyNepritel[0][5] == 1) {Dmg = Dmg + 4;}
+    Attack(StatyNepritel[0][2],Dmg,StatyNepritel[0][0]);
     cout << "Zasah za " << poskozeni << " zivoty\n";
-    cout << "Vas nepritel ma jeste: " << StatyNepritelJedna[0] << " zivotu\n";
+    cout << "Vas nepritel ma jeste: " << StatyNepritel[0][0] << " zivotu\n";
     pomocnapromena = 0;}
     break;
         case 9:
@@ -357,14 +401,14 @@ case 3:
         cout << "Nemas dost many.\n";
     }else{
     AktMana = AktMana - 10;
-    StatyNepritelJedna[5] = 1;
+    StatyNepritel[0][5] = 1;
     pomocnapromena = 0;
     }
     break;
         case 10:
-    ZlomyslnyVysmech(AktMana, Cha, StatyNepritelJedna[2],StatyNepritelJedna[0]);
+    ZlomyslnyVysmech(AktMana, Cha, StatyNepritel[0][2],StatyNepritel[0][0]);
     cout << "Zasah za " << poskozeni << " zivoty\n";
-    cout << "Vas nepritel ma jeste: " << StatyNepritelJedna[0] << " zivotu\n";
+    cout << "Vas nepritel ma jeste: " << StatyNepritel[0][0] << " zivotu\n";
     break;
         case 11:
     Omameni(AktMana, Cha);
@@ -381,36 +425,40 @@ case 3:
     }
     break;
 case 4:
-    cout << " Wait\n";
+    cout << " Čekáš, doplňuje se ti mana a energie\n";
     if (AktEnergie < MaxEnergie){AktEnergie++;}
     if (AktMana < MaxMana){AktMana++;}
     pomocnapromena = 0;
     break;
 }
 }while (pomocnapromena == 1);
-if (DoT == 1){StatyNepritelJedna[0] = StatyNepritelJedna[0] - 1;}
-if(StatyNepritelJedna[0] <= 0){
+if (DoT >= 1){StatyNepritel[0][0] = StatyNepritel[0][0] - DoT;}
+if(StatyNepritel[0][0] <= 0){
 cout << "Gratuluji zabyl jsi " << NazevNepritelJedna << endl;
-cout << "Ziskal jsi " << StatyNepritelJedna[3] << " zkusenosti\n";
-xp = xp + StatyNepritelJedna[3];
-cout << "Ziskal jsi " << StatyNepritelJedna[4] << " Zlatych\n";
-Penize = Penize + StatyNepritelJedna[4];
+cout << "Ziskal jsi " << StatyNepritel[0][3] << " zkusenosti\n";
+xp = xp + StatyNepritel[0][3];
+if (lvl > 10 && xp >= 20) {cout << " Level Up\n"; xp = 0; lvl++;}else if (lvl > 5 && xp >= 10) {cout << " Level Up\n"; xp = 0; lvl++;}else if (xp >= 5){cout << " Level Up\n"; xp = 0; lvl++;}
+srand(time(0));
+int NahodOdm = rand() % 2 + 1;
+if(NahodOdm == 1){
+cout << "Našel jsi " << StatyNepritel[0][4] << " Zlatých\n";
+Penize = Penize + StatyNepritel[0][4];}
 KonSouboje = 1;
 }else{
 if(Schovan = 1){
-cout << NazevNepritelJedna << " si vas nevsimne.\n";
+cout << NazevNepritelJedna << " si vás nevšimne.\n";
 }else if(Omamen > 0){
 Omamen--;
-cout << NazevNepritelJedna << " na vas nezautoci.\n";
+cout << NazevNepritelJedna << " na vás nezaútočí.\n";
 }else if(omracen == 1){
-cout << NazevNepritelJedna << " Je omracen.\n";
+cout << NazevNepritelJedna << " Je omráčen.\n";
 }else{
-cout << NazevNepritelJedna << " na vas zautoci.\n";
-Attack(Dex,StatyNepritelJedna[1],AktHP);
-cout << "Zasah za " << poskozeni << " zivotu\n";
-cout << "Vase aktualni zivoty jsou " << AktHP << "/" << MaxHP <<endl;
+cout << NazevNepritelJedna << " na vás zaútočí.\n";
+Attack(Dex,StatyNepritel[0][1],AktHP);
+cout << "Zásah za " << poskozeni << " životy\n";
+cout << "Vaše aktualní životy jsou " << AktHP << "/" << MaxHP <<endl;
 if (AktHP <= 0){
-    cout << "Zemrel jsi.\n";
+    cout << "Zemřel jsi.\n";
     KonSouboje = 1;
 }
 }
@@ -498,6 +546,7 @@ case 5:
 default:
     if (y == 1){
     Zbran = "Klacek";
+    Podminka = 1;
     Str = 1;
     Dex = 4;
     Con = 2;
@@ -556,7 +605,7 @@ if (y == 2){
     cout << " Aktualní životy: " << AktHP << "/" << MaxHP << endl << endl;
     cout << " Aktualní energie: " << MaxEnergie << "/" << AktEnergie << endl << endl;
     cout << " Aktualní mana: " << MaxMana << "/" << AktMana << endl << endl;
-    cout << "Jste si jisti svim vyberem? 1 - Ano 2 - Ne\n";
+    cout << "Jste si jisti svím výběrem? 1 - Ano 2 - Ne\n";
     cin >> anone;
 }
     switch (anone){
@@ -567,7 +616,7 @@ case 2:
     Karel = 0;
     break;
 default:
-    cout << "Neplatny vyber";
+    cout << "Neplatný výběr";
     break;
     }
 
@@ -586,7 +635,7 @@ case 1:
     switch (anone){
         case 1:
             cout << " Za dveřmi je schodiště bráněné krysou. Krysa na vás zaútočí\n";
-            Krysa(StatyNepritelJedna[0],StatyNepritelJedna[1],StatyNepritelJedna[2],NazevNepritelJedna,StatyNepritelJedna[3],StatyNepritelJedna[4]);
+            Krysa(StatyNepritel[0][0],StatyNepritel[0][1],StatyNepritel[0][2],NazevNepritelJedna,StatyNepritel[0][3],StatyNepritel[0][4]);
             SoubojJedna();
             placeholder = 1;
             break;
@@ -608,38 +657,35 @@ case 3:
     cout << "vase jmeno je " << jmeno;
 }
 }while (placeholder == 0);
-cout << " Porazili jste krysu, Jediná cesta dál je schodiště, chcete jít po schodech nahoru? 1 - Ano 2 - Ne\n";
-cin >> anone;
-switch (anone) {
-case 1:
-    cout << " Pokračujete dál po schodech. Jakmile dorazíte po schodech nahoru všimnete si dveří, z pod kterých svítí příjemná žlutá záře.\n\n Chcete je otevřít?\n 1 - Ano\n 2 - Ne\n";
-    cin >> anone;
-    switch (anone){
+cout << " Porazili jste krysu, Jediná cesta dál je schodiště.";
+    cout << " Pokračujete dál po schodech. Jakmile dorazíte nahoru, všimnete si dveří, z pod kterých svítí příjemná žlutá záře. Otevíráte dveře.\n";
+    cout << " Za dveřmi je středně velká místnost osvětlená loučemi, na protější straně leží sýr... co chcete delat?\n\n 1 - Jít k sýru a prosokumat ho\n 2 - Vrátit se po schodech dolů\n 3 - Zůstat stát\n 4 - Jít ke dveřím na druhé straně místnosti\n";
+    cin >> akce;
+    switch (akce){
     case 1:
-        cout << " Za dveřmi je středně velká místnost osvětlená loučemi, na protější straně leží sýr... co chcete delat?\n\n 1 - Jít k sýru a prosokumat ho\n 2 - Vrátit se po schodech dolů\n 3 - Zůstat stát\n 4 - Jít ke dveřím na druhé straně místnosti\n";
+        cout << " Prozkoumáváš sír, zatím co koukáš na sír nevšimneš si krysi, která na tebe zaútočí.";
+        Krysa(StatyNepritel[0][0],StatyNepritel[0][1],StatyNepritel[0][2],NazevNepritelJedna,StatyNepritel[0][3],StatyNepritel[0][4]);
+        SoubojJedna();
+        break;
+    case 2:
+        cout << " Vrátíš se po schodech dolů, mrtvola krysi leží dole na schodišti. co chceš dělat? \n 1 - Vrátit se po schodech nahoru \n 2 - Pohřbít krysu \n 3 - Vrátit se k ohni\n";
         cin >> akce;
         switch (akce){
         case 1:
-            cout << " Prozkoumáváš sír, zatím co koukáš na sír nevšimneš si krysi, která na tebe zaútočí.";
-            Krysa(StatyNepritelJedna[0],StatyNepritelJedna[1],StatyNepritelJedna[2],NazevNepritelJedna,StatyNepritelJedna[3],StatyNepritelDva[4]);
-            SoubojJedna();
+            cout << " Vracíš se zpátky po schodech nahoru\n";
             break;
         case 2:
-            cout << " Vrátíš se po schodech dolů, mrtvola krysi stále leží dole na schodišti. co chceš dělat? \n 1 - Vrátit se po schodech nahoru \n 2 - Pohřbít krysu \n 3 - Vrátit se k ohni\n";
-            cin >> akce;
-            switch (akce){
-            case 1:
-                cout << " Vracíš se zpátky po schodech nahoru\n";
-                break;
-            case 2:
-                cout << " Z kamínků a dalších malích předmětů, co jsi našel ležet po místonsti, jsi zhotovil malou mohylu co chceš dělat dál? ";
-            }
-        }
-    }
-    break;
-case 2:
-cout << " Stojíte v místnosti s poraženou krysou.\n";
-break;
+            cout << " Z kamínků a dalších malích předmětů, co jsi našel ležet po místonsti, jsi zhotovil malou mohylu co chceš dělat dál? ";
+            break;
+        case 3:
+            cout << " Vrátili jste se k ohni, příjemná záře ohně vám doplní energii, manu a životy.\n";
+            FullHeal();
+            AktEnergie = MaxEnergie;
+            AktMana = MaxMana;
+            break;
+        default:
+            cout << " Neplatný výběr.\n";
+}
 }
 placeholder = 0;
 }while (placeholder == 1);
