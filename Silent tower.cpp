@@ -6,6 +6,7 @@
 #include <stdlib.h> //Zdroj -> https://learn.microsoft.com/cs-cz/cpp/cpp/program-termination?view=msvc-170 Vyuziti -> Ukonceni Programu
 using namespace std;
 int Podminka = 0;
+int anone = 0;
 int omracen;
 int Omamen;
 int DoT;
@@ -29,7 +30,7 @@ int Int;
 int Cha;
 int Con;
 int Penize;
-string inventar[5] = {"Lektvar léčení ", " - ", " - ", " - ", " - "};
+string inventar[5] = {"Lektvar léčení", "-", "-", "-", "-"};
 int uprinv = 0;
 int konec = 0;
 int loot;
@@ -56,6 +57,15 @@ void LektvarLeceni(){
 AktHP = AktHP + 3;
 if(AktHP > MaxHP){AktHP = MaxHP;}
 }
+void LektvarMany(){
+AktMana = AktMana + 3;
+if(AktMana > MaxMana){AktMana = MaxMana;}
+}
+void LektvarEnergie(){
+AktEnergie = AktEnergie + 3;
+if(AktEnergie > MaxEnergie){AktEnergie = MaxEnergie;}
+}
+
 void GoblinEnmy(int &HPGoblin, int &DMGGoblin, int &OBRGoblin, string &NazevGoblin, int &OdmXP, int &OdmPrachy){
 HPGoblin = 10;
 DMGGoblin = 3;
@@ -102,30 +112,162 @@ void Klacek() {
 Dmg = Str + 1;
 }
 void Inventar(){
+    konec = 0;
 do{
     for (int i;i <= 5;i++){
         cout << inventar[i] << " ";
     }
-    cout << " Co chcete dělat?\n 1 - Zahodit předmět \n 2 - Použít předmět \n 3 - Ukončit\n";
+    cout << "\n Co chcete dělat?\n 1 - Zahodit předmět \n 2 - Použít předmět \n 3 - Ukončit\n";
     cin >> uprinv;
     switch (uprinv) {
 case 1:
-    cout << " zahodit \n";
+    do{
+    cout << " Na jakém místě se nachází předmět, který chcete zahodit? (1 - 5)\n";
+    cin >> x;
+    }while(x < 1 || x > 5);
+    x--;
+    cout << "Jste si jisti že chcete " << inventar[x] << " zahodit? (1 - Ano, 2 - Ne)\n";
+    cin >> anone;
+    switch (anone){
+case 1:
+    if(inventar[x] == "-"){
+    cout << " Na tomto místě nic nemáte.\n";
+    }else{
+    inventar[x] = "-";
+    konec = 1;
+    pomocnapromena = 0;
+    }
     break;
 case 2:
-    cout << " Na jakém místě se nachází předmět, který chcete použít?\n";
-    cin >> x;
-    cout << "Jste si jisti že chcete " << inventar[x] << " použít?\n";
     break;
+default:
+    cout << " Neplatný výběr\n";
+    break;
+    }
+    break;
+case 2:
+    do{
+    cout << " Na jakém místě se nachází předmět, který chcete použít? (1 - 5)\n";
+    cin >> x;
+    }while(x < 1 || x > 5);
+    x--;
+    cout << "Jste si jisti že chcete " << inventar[x] << " použít? (1 - Ano, 2 - Ne)\n";
+    cin >> anone;
+    switch (anone){
+case 1:
+    if(inventar[x] == "Lektvar léčení"){
+    inventar[x] = "-";
+    cout << " Vypijete lektvar léčení.\n";
+    LektvarLeceni();
+    cout << " Vaše životy: " << AktHP << "/" << MaxHP <<endl;
+    konec = 1;
+    pomocnapromena = 0;
+    }else if(inventar[x] == "Lektvar many"){
+    inventar[x] = "-";
+    cout << " Vypijete lektvar many.\n";
+    LektvarMany();
+    cout << " Vaše Mana: " << AktMana << "/" << MaxMana <<endl;
+    konec = 1;
+    pomocnapromena = 0;
+    }else if(inventar[x] == "Energiťák"){
+    inventar[x] = "-";
+    cout << " Vypijete Energiťák.\n";
+    LektvarEnergie();
+    cout << " Vaše Energie: " << AktEnergie << "/" << MaxEnergie <<endl;
+    konec = 1;
+    pomocnapromena = 0;
+    }else{
+    cout << " Na vybraném místě nic nemáš.\n";
+    }
+    break;
+case 2:
+    break;
+default:
+    cout << " Neplatný výběr\n";
+    break;
+    }
 case 3:
     konec = 1;
     break;
 default:
     cout << "Neplatný výběr \n";
 }
-}while (konec = 0);
+}while (konec == 0);
 }
 void FullHeal(){AktHP = MaxHP;}
+void FullEnergie(){AktEnergie = MaxEnergie;}
+void FullMana(){AktMana = MaxMana;}
+void LvlUp(){
+int LvlVyber;
+xp = 0;
+lvl++;
+MaxHP++;
+MaxEnergie++;
+MaxMana++;
+FullEnergie();
+FullHeal();
+FullMana();
+if (lvl == 5){
+    cout << "\n Odemčena nová schopnost: ";
+    switch (schopnosti[SchopnostiClass][1]){
+case 2:
+    cout << "Omračující útok - omráčí nepřítele.\n";
+    break;
+case 5:
+    cout << "Ohnivá koule - Ublíží všem nepřátelům za Inteligence + 3.\n";
+    break;
+case 8:
+    cout << "Dvojitá střela - provede dva útoky hned po sobě.\n";
+    break;
+case 11:
+    cout << "Omámení - Omámí nepřítele. Omámený nepřítel na vás nebude útočit, pokud vy nebudete útočit na něj.\n";
+case 14:
+    cout << "Útok ze zálohy - pokud jste schovaní + 5 k útoku.\n";
+case 17:
+    cout << "Hbyté ruce - Ze zabytých nepřátel získáte více zlaťáků.\n";
+    }
+}else if(lvl == 10){
+    cout << "\n Odemčena nová schopnost: ";
+    switch (schopnosti[SchopnostiClass][2]){
+case 3:
+    cout << "Bojový pokřik - Ublíží všem nepřátelům za Síla + 5.\n";
+    break;
+case 6:
+    cout << "Dračí dech - Ublíží všem nepřátelům za Inteligence + 3, bez ohledu na obranu nepřítele.\n";
+    break;
+case 9:
+    cout << "Lovcovo znamení - Označí jednoho nepřítele, ubíráte mu více životů.\n";
+    break;
+case 12:
+    cout << "Tanec boje - Poškození = Obratnost + charisma.\n";
+case 15:
+    cout << "Mistr Jedu - pokud jste schovaní, můžete otrávit nepřítele (2 Poškození za kolo).\n";
+case 18:
+    cout << "Zuřivost malých - Permanentně poškození + 5.\n";
+}
+}
+if (lvl % 5 == 0){
+cout << " Jakou vlastnost chcete vylepšit?\n 1 - Síla\n 2 - Obratnost\n 3 - Odolnost\n 4 - Inteligence\n 5 - Charisma\n";
+cin >> LvlVyber;
+switch (LvlVyber){
+case 1:
+    Str++;
+    break;
+case 2:
+    Dex++;
+    break;
+case 3:
+    Con++;
+    break;
+case 4:
+    Int++;
+    break;
+case 5:
+    Cha++;
+    break;
+}
+}
+}
 void nastavBarvu(int barva) {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(hConsole, barva);
@@ -159,12 +301,12 @@ Attack(ObranaCile, DmgOmracUtk, HPCile);
     pomocnapromena = 0;
     }
 }
-void ZuriviRev(int Energ,int Str, int ObranaCile, int &DmgZurRev){
+void BojovyPokrik(int Energ,int Str, int ObranaCile, int &DmgZurRev){
     if (Energ <= 9){
         cout << "Nemáš dost energie\n";
     }else{
 AktEnergie = AktEnergie - 10;
-cout << " Používáš zuřiví řev\n";
+cout << " Používáš Bojový Pokřik\n";
 DmgZurRev = Str + 5 - ObranaCile;
     omracen = 1;
     pomocnapromena = 0;
@@ -285,6 +427,49 @@ void FuryOfTheBall(){
 Dmg = Dmg + 5;
 }
 
+void Shop(){
+int Odejit = 0;
+int ShopAkce;
+cout << " Výtejte v obchodě.\n";
+cout << " Co si chcete koupit?\n 1 - Doplnění životů, energie a many (Zdarma)\n 2 - Vylepšení životů + 1 (5 zlatých)\n 3 - Vylepšení Many + 1(5 zlatých)\n 4 - Vylepšení Energie + 1(5 zlatých)\n 5 - Lektvar skušeností Lvlup (10 zlatých)\n 6 - Lektvary\n 7 - Odejít\n";
+cin >> ShopAkce;
+switch (ShopAkce){
+case 1:
+    FullHeal();
+    FullEnergie();
+    FullMana();
+    break;
+case 2:
+    if (Penize < 5){
+        cout << " Nemáš dost peněz. \n";
+    }else{
+    Penize = Penize - 5;
+    MaxHP++;
+    AktHP++;
+    cout << " Vaše životy jsou nyní: " << AktHP << "/" << MaxHP << endl;
+    }
+    break;
+case 3:
+    if (Penize < 5){
+        cout << " Nemáš dost peněz. \n";
+    }else{
+    Penize = Penize - 5;
+    MaxMana++;
+    AktMana++;
+    cout << " Vaše mana je nyní: " << AktMana << "/" << MaxMana << endl;
+    }
+    break;
+case 4:
+    if (Penize < 5){
+        cout << " Nemáš dost peněz. \n";
+    }else{
+    Penize = Penize - 5;
+    MaxEnergie++;
+    AktEnergie++;
+    cout << " Vaše energie je nyní: " << AktEnergie << "/" << MaxEnergie << endl;
+    }
+    break;
+}}
 void SoubojJedna(){
 PocetEnemy = 1;
 Schovan = 0;
@@ -359,7 +544,7 @@ case 3:
     cout << "Vas nepritel ma jeste: " << StatyNepritel[0][0] << " zivotu\n";
     break;
         case 3:
-    ZuriviRev(AktEnergie, Str,StatyNepritel[0][2],poskozeni);
+    BojovyPokrik(AktEnergie, Str,StatyNepritel[0][2],poskozeni);
     StatyNepritel[0][0] = StatyNepritel[0][0] - poskozeni;
     cout << "Zasah za " << poskozeni << " zivoty\n";
     cout << "Vas nepritel ma jeste: " << StatyNepritel[0][0] << " zivotu\n";
@@ -384,7 +569,7 @@ case 3:
         case 7:
     TrnovySlahoun(AktMana);
     break;
-        case 8:
+        case 8: //Dvojitá střela
     if (AktEnergie <= 4){cout << "Nemas dost energie\n";}else{
     if (StatyNepritel[0][5] == 1) {Dmg = Dmg + 4;}
     Attack(StatyNepritel[0][2],Dmg,StatyNepritel[0][0]);
@@ -397,7 +582,7 @@ case 3:
     pomocnapromena = 0;}
     break;
         case 9:
-    if (AktMana >= 9){
+    if (AktMana >= 9){ // Lovcovo Znamení
         cout << "Nemas dost many.\n";
     }else{
     AktMana = AktMana - 10;
@@ -437,7 +622,7 @@ if(StatyNepritel[0][0] <= 0){
 cout << "Gratuluji zabyl jsi " << NazevNepritelJedna << endl;
 cout << "Ziskal jsi " << StatyNepritel[0][3] << " zkusenosti\n";
 xp = xp + StatyNepritel[0][3];
-if (lvl > 10 && xp >= 20) {cout << " Level Up\n"; xp = 0; lvl++;}else if (lvl > 5 && xp >= 10) {cout << " Level Up\n"; xp = 0; lvl++;}else if (xp >= 5){cout << " Level Up\n"; xp = 0; lvl++;}
+if (lvl > 10 && xp >= 20) {cout << " Level Up\n"; LvlUp();}else if (lvl > 5 && xp >= 10) {cout << " Level Up\n"; LvlUp();}else if (xp >= 5){cout << " Level Up\n"; LvlUp();}
 srand(time(0));
 int NahodOdm = rand() % 2 + 1;
 if(NahodOdm == 1){
@@ -445,7 +630,7 @@ cout << "Našel jsi " << StatyNepritel[0][4] << " Zlatých\n";
 Penize = Penize + StatyNepritel[0][4];}
 KonSouboje = 1;
 }else{
-if(Schovan = 1){
+if(Schovan == 1){
 cout << NazevNepritelJedna << " si vás nevšimne.\n";
 }else if(Omamen > 0){
 Omamen--;
@@ -471,7 +656,6 @@ int main(){
     SetConsoleOutputCP(CP_UTF8);
 josef = 1;
 int Karel = 0;
-int anone = 0;
 int placeholder = 0;
 int sila;
 int vyberclass;
@@ -623,7 +807,7 @@ default:
 }while (Karel == 0);
     cout << "_______________________________________________________________________________________________________________________";
     cout  << endl << endl;
-    cout << " Probouzíte se v šedé kamenné místnosti. Uprostřed místnosti hoří malý oheň, který ji slabě osvětluje. Na druhém konci místnosti vidíte dveře, za kterými něco vydává škrábavé zvuky."; //pouzito AI pro opravení chyb v již napsaném textu
+    cout << " Probouzíte se v šedé kamenné místnosti. Uprostřed místnosti hoří malý oheň, který ji slabě osvětluje. Na druhém konci místnosti vidíte dveře, za kterými něco vydává škrábavé zvuky.\n"; //pouzito AI pro opravení chyb v již napsaném textu
 do{
     cout << " Co chcete dělat?\n\n 1 - Jít ke dveřím\n 2 - Zůstat sedět na zemi\n 3 - Pokusit si vzpomenout jak jste se sem dostali\n";
     cin >> akce;
@@ -648,16 +832,20 @@ case 1:
     }
     break;
 case 2:
-    cout << " Zůstáváte sedět na zemi... zem je tvrdá a studená, zjevně kámen.";
+    cout << " Zůstáváte sedět na zemi... zem je tvrdá a studená, zjevně kámen.\n";
     break;
 case 3:
     cout << " Snažíte se přemýšlet nad tím jak jste se sem dostali a proč tu vlastně jste.\n Jak tak přemýšlíte zjistíte že nejste schopni vzpomenout si na vaše jméno\n\n Zadejte jak se budete jmenovat: ";
     cin.ignore(); //Rada od umělé inteligence. Řeší problém s tím, že mi nešlo zapsat nové jméno přes getline.
     getline(cin, jmeno);
-    cout << "vase jmeno je " << jmeno;
+    cout << "vase jmeno je " << jmeno <<endl;
+    break;
+default:
+    cout << " Neplatný výběr.";
+    break;
 }
 }while (placeholder == 0);
-cout << " Porazili jste krysu, Jediná cesta dál je schodiště.";
+cout << " Porazili jste krysu, Jediná cesta dál je schodiště.\n";
     cout << " Pokračujete dál po schodech. Jakmile dorazíte nahoru, všimnete si dveří, z pod kterých svítí příjemná žlutá záře. Otevíráte dveře.\n";
     cout << " Za dveřmi je středně velká místnost osvětlená loučemi, na protější straně leží sýr... co chcete delat?\n\n 1 - Jít k sýru a prosokumat ho\n 2 - Vrátit se po schodech dolů\n 3 - Zůstat stát\n 4 - Jít ke dveřím na druhé straně místnosti\n";
     cin >> akce;
@@ -685,6 +873,7 @@ cout << " Porazili jste krysu, Jediná cesta dál je schodiště.";
             break;
         default:
             cout << " Neplatný výběr.\n";
+            break;
 }
 }
 placeholder = 0;
