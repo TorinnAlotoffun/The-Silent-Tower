@@ -142,10 +142,10 @@ Dmg = Str + 1;
 }
 void Inventar(){
     konec = 0;
+    uprinv = 0;
 do{
-    for (int i;i <= 5;i++){
-        cout << inventar[i] << " ";
-    }
+    for (int i = 0;i <= 5;i++){
+        cout << inventar[i] << " ";}
     cout << "\n Co chcete dělat?\n 1 - Zahodit předmět \n 2 - Použít předmět \n 3 - Ukončit\n";
     cin >> uprinv;
     switch (uprinv) {
@@ -217,6 +217,7 @@ default:
     }
 case 3:
     konec = 1;
+    pomocnapromena = 1;
     break;
 default:
     cout << "Neplatný výběr \n";
@@ -670,6 +671,12 @@ case 3:
     if (lvl >= 10){
     cout << " Na jaké pozici je schopnost kterou chceš použít? (0,1,2)\n";
     cin >> SchopnostLvl;
+    if(SchopnostLvl < 0 || SchopnostLvl > 3){
+        cout << "Neplatný výběr\n";
+        pomocnapromena = 1;
+    }else{
+        pomocnapromena = 0;
+    }
     }else if(lvl < 10 && lvl > 5){
     cout << " Na jaké pozici je schopnost kterou chceš použít? (0,1)\n";
     cin >> SchopnostLvl;
@@ -681,6 +688,7 @@ case 3:
     }
     }else{
     SchopnostLvl = 0;
+        pomocnapromena = 0;
     }
     }while(pomocnapromena == 1);
     switch (schopnosti[SchopnostiClass][SchopnostLvl]){
@@ -957,6 +965,12 @@ case 3:
     if (lvl >= 10){
     cout << " Na jaké pozici je schopnost kterou chceš použít? (0,1,2)\n";
     cin >> SchopnostLvl;
+    if(SchopnostLvl < 0 || SchopnostLvl > 3){
+        cout << "Neplatný výběr\n";
+        pomocnapromena = 1;
+    }else{
+        pomocnapromena = 0;
+    }
     }else if(lvl < 10 && lvl > 5){
     cout << " Na jaké pozici je schopnost kterou chceš použít? (0,1)\n";
     cin >> SchopnostLvl;
@@ -968,6 +982,7 @@ case 3:
     }
     }else{
     SchopnostLvl = 0;
+        pomocnapromena = 0;
     }
     }while(pomocnapromena == 1);
     switch (schopnosti[SchopnostiClass][SchopnostLvl]){
@@ -1171,7 +1186,7 @@ PocetEnemy = 1;
 Schovan = 0;
 StatyNepritel[0][8] = 0;
 KonSouboje = 0;
-cout << " Před vámi je " << NazevNepritelJedna << ", " << NazevNepritelDva << " a " << NazevNepritelTri << "\n";
+cout << " Před vámi je " << NazevNepritelJedna << "\n";
 if (Zbran == "Mec"){
     Mec();
 }else if (Zbran == "Hul"){
@@ -1215,6 +1230,11 @@ case 3:
     if (lvl >= 10){
     cout << " Na jaké pozici je schopnost kterou chceš použít? (0,1,2)\n";
     cin >> SchopnostLvl;
+    if(SchopnostLvl < 0 || SchopnostLvl > 2){
+        cout << "Neplatný výběr\n";
+        pomocnapromena = 1;
+    }else{
+        pomocnapromena = 0;}
     }else if(lvl < 10 && lvl > 5){
     cout << " Na jaké pozici je schopnost kterou chceš použít? (0,1)\n";
     cin >> SchopnostLvl;
@@ -1226,6 +1246,7 @@ case 3:
     }
     }else{
     SchopnostLvl = 0;
+        pomocnapromena = 0;
     }
     }while(pomocnapromena == 1);
     switch (schopnosti[SchopnostiClass][SchopnostLvl]){
@@ -1448,6 +1469,8 @@ if (AktHP <= 0){
 }
 }
 void SoubojDva(){
+int y = 0;
+int a = 0;
 PocetEnemy = 2;
 Schovan = 0;
 StatyNepritel[0][8] = 0;
@@ -1501,6 +1524,12 @@ case 3:
     if (lvl >= 10){
     cout << " Na jaké pozici je schopnost kterou chceš použít? (0,1,2)\n";
     cin >> SchopnostLvl;
+    if(SchopnostLvl < 0 || SchopnostLvl > 2){
+        cout << "Neplatný výběr\n";
+        pomocnapromena = 1;
+    }else{
+        pomocnapromena = 0;
+    }
     }else if(lvl < 10 && lvl > 5){
     cout << " Na jaké pozici je schopnost kterou chceš použít? (0,1)\n";
     cin >> SchopnostLvl;
@@ -1512,6 +1541,7 @@ case 3:
     }
     }else{
     SchopnostLvl = 0;
+        pomocnapromena = 0;
     }
     }while(pomocnapromena == 1);
     switch (schopnosti[SchopnostiClass][SchopnostLvl]){
@@ -1722,9 +1752,8 @@ case 4:
 if (StatyNepritel[0][8] >= 1){StatyNepritel[0][0] = StatyNepritel[0][0] - StatyNepritel[0][8];}
 if (StatyNepritel[1][8] >= 1){StatyNepritel[1][0] = StatyNepritel[1][0] - StatyNepritel[1][8];}
 if(StatyNepritel[0][0] <= 0){
-int y = 0;
-if (y == 0){
-y = 1;
+if (a == 0){
+a = 1;
 PocetEnemy--;
 cout << "Gratuluji zabyl jsi " << NazevNepritelJedna << endl;
 cout << "Ziskal jsi " << StatyNepritel[0][3] << " zkusenosti\n";
@@ -1757,7 +1786,6 @@ if (AktHP <= 0){
 }
 }
 if(StatyNepritel[1][0] <= 0){
-int y = 0;
 if (y == 0){
 y = 1;
 PocetEnemy--;
@@ -1791,7 +1819,7 @@ if (AktHP <= 0){
 }
 }
 }
-if (PocetEnemy == 0){KonSouboje = 1;}
+if (PocetEnemy <= 0){KonSouboje = 1;}
 }while (KonSouboje == 0);
 }
 }
@@ -1850,6 +1878,12 @@ case 3:
     if (lvl >= 10){
     cout << " Na jaké pozici je schopnost kterou chceš použít? (0,1,2)\n";
     cin >> SchopnostLvl;
+    if(SchopnostLvl < 0 || SchopnostLvl > 3){
+        cout << "Neplatný výběr\n";
+        pomocnapromena = 1;
+    }else{
+        pomocnapromena = 0;
+    }
     }else if(lvl < 10 && lvl > 5){
     cout << " Na jaké pozici je schopnost kterou chceš použít? (0,1)\n";
     cin >> SchopnostLvl;
@@ -1861,6 +1895,7 @@ case 3:
     }
     }else{
     SchopnostLvl = 0;
+        pomocnapromena = 0;
     }
     }while(pomocnapromena == 1);
     switch (schopnosti[SchopnostiClass][SchopnostLvl]){
