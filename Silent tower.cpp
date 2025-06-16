@@ -90,7 +90,7 @@ OdmPrachy = 20;
 void KrysiKral(int &HPKrysiKral, int &DMGKrysiKral, int &OBRKrysiKral, string &NazevKrysiKral, int &OdmXP, int &OdmPrachy){
 HPKrysiKral = 10;
 DMGKrysiKral = 4;
-OBRKrysiKral = 6;
+OBRKrysiKral = 5;
 NazevKrysiKral = "Krysí král";
 OdmXP = 10;
 OdmPrachy = 20;
@@ -313,6 +313,7 @@ void nastavBarvu(int barva) {
 void Attack(int ObranaNepritele, int DmgUtok, int &HpNepritele){
 poskozeni = 0;
 poskozeni = DmgUtok - ObranaNepritele;
+if (Schovan == 1){poskozeni += 2;}
 if (poskozeni <= 0) {poskozeni = 1;}
 HpNepritele = HpNepritele - poskozeni;
 }
